@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const requestUrl = 'https://api.unsplash.com/search/photos?page=1&per_page=15&query=smalltown';
+const response = await fetch(requestUrl, {
+  headers: {
+    'Authorization': `Client-ID ${import.meta.env.UNSPLASH_API_KEY}`
+  }
+});
+
+const data = await response.json();
+const results = data?.results || [];
+const image = results[Math.floor(Math.random() * 10)]?.urls;
+---
+
+<Layout title="About us">
+  <main>
+    <h1 class="text-center">About Us</h1>
+    <div class="flex justify-center my-8">
+      <div class="basis-1/2">
+        <div class="flex justify-center">
+          <img class="object-contain" src={image.regular} />
+        </div>
+      </div>
+      <div class="basis-1/2 grow-0 px-6">
+        <h2>Our story</h2>
+        <div class="pt-3 whitespace-normal">
+          <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et massa at enim volutpat dignissim nec a massa. Sed at dictum metus, vel tempus sem. Maecenas interdum semper fringilla. Vestibulum a lacus sem. Proin a arcu leo. Aenean facilisis consequat porta. Nunc tellus dolor, mattis ac mattis vel, congue sit amet leo. Ut sed congue dui. Vivamus gravida, diam a interdum condimentum, ante dolor elementum felis, ac aliquet tellus risus a nisl. Suspendisse sodales tristique elit, sed varius magna. Aenean metus est, porta vel enim eu, semper lobortis arcu. Maecenas ac scelerisque ligula. Nullam sit amet arcu id diam rutrum rutrum vitae eget nisl. Proin sodales lacinia urna sit amet maximus. Vivamus libero metus, vehicula id velit eu, tristique pretium risus.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

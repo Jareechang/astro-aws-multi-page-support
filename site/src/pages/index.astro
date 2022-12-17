@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.tsx';
+
+const requestUrl = 'https://api.unsplash.com/search/photos?page=1&per_page=15&query=flowers';
+const response = await fetch(requestUrl, {
+  headers: {
+    'Authorization': `Client-ID ${import.meta.env.UNSPLASH_API_KEY}`
+  }
+});
+
+const data = await response.json();
+const results = data?.results || [];
+const images = results.map(images => images.urls);
+---
+
+<Layout title="Home">
+  <main>
+    <h1 class="text-center">Faith’s Floral Boutique</h1>
+    <ul class="flex flex-row justify-center">
+      <li class="px-2">
+        <a class="hover:underline" href="/about"> About Us</a>
+      </li>
+    </ul>
+    <div class="relative flex min-h-screen flex-col justify-center py-6 sm:py-12">
+      <div
+        class="columns-2 2xl:columns-3 gap-10 [column-fill:_balance] box-border mx-auto before:box-inherit after:box-inherit">
+        {images.map((imageSizes) => (
+          <div class="break-inside-avoid p-8 mb-6 bg-slate-200 rounded-lg">
+            <img src={imageSizes.small} />
+            <Button client:visible text="Order" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+</Layout>

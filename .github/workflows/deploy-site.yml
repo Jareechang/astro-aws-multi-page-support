@@ -1,0 +1,33 @@
+name: deploy-site
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+# more changes
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure
+        uses: actions/checkout@v2
+      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: 6.10.0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+            role-to-assume: "arn:aws:iam::642660919026:role/github-actions"
+            aws-region: "us-east-1"
+      - run: ./scripts/deploy-site.sh
+        env:
+          AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          UNSPLASH_API_KEY: ${{ secrets.UNSPLASH_API_KEY }}
+          AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
